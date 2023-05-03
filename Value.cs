@@ -22,9 +22,12 @@ public class Value{
         };
         return ret;
     }
+    //unary negation
     public static Value operator -(Value a){
         return a*(-1);
     }
+
+    //subtraction
 
      public static Value operator -(Value a,Value b){
         return a+(-b);
@@ -37,18 +40,39 @@ public class Value{
         ret.Opeartor = "*";
         ret.Data = a.Data*b.Data;
         ret._backward = ()=>{
-            a.Grad = b.Data * ret.Grad;
-            b.Grad = a.Data * ret.Grad;
+            a.Grad += b.Data * ret.Grad;
+            b.Grad += a.Data * ret.Grad;
         };
         return ret;
     }
 
-    public static Value operator /(Value a, Value b){
-        var ret = new Value(0);
+    public static Value Exp(Value a){
+        var ret = new Value(Math.Exp(a.Data));
         ret.From.Add(a);
-        ret.From.Add(b);
+        ret.Opeartor = "e^x";
+        ret._backward = () =>{
+            a.Grad += Math.Exp(a.Data) * ret.Grad;
+        };
+        return ret;
+    }
+
+    public Value tanh(){
+        return new Value(0);
+    }
+
+    public static Value Pow (Value a,double by){
+        var ret = new Value(Math.Pow(a.Data,by));
+        ret.From.Add(a);
+        ret._backward = () =>{
+            a.Grad += Math.Pow(a.Data,by-1) * ret.Grad;
+        };
+        ret.Opeartor = "^";
+        return ret;
+    }
+
+    public static Value operator /(Value a, Value b){
+        var ret = a * Pow(b,-1);
         ret.Opeartor = "/";
-        ret.Data = a.Data/b.Data;
         return ret;
     }
 

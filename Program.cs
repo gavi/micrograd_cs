@@ -1,4 +1,8 @@
 ﻿namespace dn_mnist;
+using DotNetGraph;
+using DotNetGraph.Extensions;
+using DotNetGraph.Node;
+using System.Drawing;
 class Program
 {
     static void Main(string[] args)
@@ -15,18 +19,34 @@ class Program
         Value e = c*d;
         e.Label = "e";
 
-        e.Backward();
-
-
-        Value x = e/10;
+        Value x = new Value(10);
         x.Label = "x";
-        Value y = x + 15;
+        Value y = e / x;
         y.Label = "y";
 
-
-        add_test1();
-        topo_test(y);
+        y.Backward();
+        
+        DrawGraph(y);
+        NeuronTest();
     }
+
+    static void NeuronTest(){
+        //inputs
+        var x1 = new Value(2.0){Label = "x1"};
+        var x2 = new Value(0.0){Label = "x2"};
+        //weights
+        var w1 = new Value(2.0){Label = "x1"};
+        var w2 = new Value(2.0){Label = "x1"};
+        //bias
+        var b = new Value(6.8813753870195432){Label="b"};
+
+        var x1w1 = x1*w1; x1w1.Label = "x1w1";
+        var x2w2 = x2*w2; x2w2.Label = "x2w2";
+        var x1w1x2w2 = x1w1 + x2w2; x1w1x2w2.Label = "x1w1 + x2w2";
+        var n = x1w1x2w2 + b; n.Label = "n";
+        
+    }
+
     static void add_test1(){
         Value a = new Value(10);
         Value b = new Value(20);
@@ -51,5 +71,25 @@ class Program
             DFS(child);
             Console.Write(")");
         }
+    }
+
+    static void DrawGraph(Value root){
+        var graph = new DotGraph("Micrograd",true);
+        FillGraph(root,graph);
+        var dot = graph.Compile(true);
+        File.WriteAllText("graph.dot",dot);
+    }
+
+    static DotNode FillGraph(Value root,DotGraph graph){
+        var node = new DotNode(Guid.NewGuid().ToString());
+        node.SetCustomAttribute("shape","record");
+        node.Label = $"{root.Label}|{root.Data}|{root.Grad}|{root.Opeartor}";
+        graph.Elements.Add(node);
+        foreach(var child in root.From){
+            var c = FillGraph(child,graph);            
+            graph.AddEdge(node,c);
+        }
+        return node;
+
     }
 }

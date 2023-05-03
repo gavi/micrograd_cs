@@ -1,0 +1,17 @@
+digraph Micrograd { 
+	"666bef29-5402-4003-b929-6d6eab113c79"[label="y|6|1|/",shape=record]; 
+	"64a2def7-ee05-4143-a02f-085b91b0e528"[label="e|60|0.1|*",shape=record]; 
+	"b16adb6b-c92b-4b42-b973-1e8cd775f758"[label="c|30|0.2|+",shape=record]; 
+	"583477f0-d77c-44b5-b131-79953768d9c8"[label="a|10|0.2|",shape=record]; 
+	"b16adb6b-c92b-4b42-b973-1e8cd775f758" -> "583477f0-d77c-44b5-b131-79953768d9c8"; 
+	"671a2571-bc91-45c3-9d25-33b5690b5352"[label="b|20|0.2|",shape=record]; 
+	"b16adb6b-c92b-4b42-b973-1e8cd775f758" -> "671a2571-bc91-45c3-9d25-33b5690b5352"; 
+	"64a2def7-ee05-4143-a02f-085b91b0e528" -> "b16adb6b-c92b-4b42-b973-1e8cd775f758"; 
+	"1f200814-e31b-4311-bbb6-e12818eae900"[label="d|2|3|",shape=record]; 
+	"64a2def7-ee05-4143-a02f-085b91b0e528" -> "1f200814-e31b-4311-bbb6-e12818eae900"; 
+	"666bef29-5402-4003-b929-6d6eab113c79" -> "64a2def7-ee05-4143-a02f-085b91b0e528"; 
+	"5c5b2705-4c20-4537-81f3-86d62a9d99ee"[label="|0.1|60|^",shape=record]; 
+	"36127b7e-e70e-40c3-b121-c20568b24c2e"[label="x|10|0.6|",shape=record]; 
+	"5c5b2705-4c20-4537-81f3-86d62a9d99ee" -> "36127b7e-e70e-40c3-b121-c20568b24c2e"; 
+	"666bef29-5402-4003-b929-6d6eab113c79" -> "5c5b2705-4c20-4537-81f3-86d62a9d99ee"; 
+}
