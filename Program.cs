@@ -2,7 +2,6 @@
 using DotNetGraph;
 using DotNetGraph.Extensions;
 using DotNetGraph.Node;
-using System.Drawing;
 class Program
 {
     static void Main(string[] args)
@@ -13,6 +12,8 @@ class Program
         output.Backward();
         DrawGraph(output);
         //NeuronTest();
+
+        MLP x = new MLP(3,new List<(int, int)>(){(3,0),(5,3),(2,5)});
     }
 
     static void BasicTest(){
