@@ -1,17 +1,21 @@
 digraph Micrograd { 
-	"666bef29-5402-4003-b929-6d6eab113c79"[label="y|6|1|/",shape=record]; 
-	"64a2def7-ee05-4143-a02f-085b91b0e528"[label="e|60|0.1|*",shape=record]; 
-	"b16adb6b-c92b-4b42-b973-1e8cd775f758"[label="c|30|0.2|+",shape=record]; 
-	"583477f0-d77c-44b5-b131-79953768d9c8"[label="a|10|0.2|",shape=record]; 
-	"b16adb6b-c92b-4b42-b973-1e8cd775f758" -> "583477f0-d77c-44b5-b131-79953768d9c8"; 
-	"671a2571-bc91-45c3-9d25-33b5690b5352"[label="b|20|0.2|",shape=record]; 
-	"b16adb6b-c92b-4b42-b973-1e8cd775f758" -> "671a2571-bc91-45c3-9d25-33b5690b5352"; 
-	"64a2def7-ee05-4143-a02f-085b91b0e528" -> "b16adb6b-c92b-4b42-b973-1e8cd775f758"; 
-	"1f200814-e31b-4311-bbb6-e12818eae900"[label="d|2|3|",shape=record]; 
-	"64a2def7-ee05-4143-a02f-085b91b0e528" -> "1f200814-e31b-4311-bbb6-e12818eae900"; 
-	"666bef29-5402-4003-b929-6d6eab113c79" -> "64a2def7-ee05-4143-a02f-085b91b0e528"; 
-	"5c5b2705-4c20-4537-81f3-86d62a9d99ee"[label="|0.1|60|^",shape=record]; 
-	"36127b7e-e70e-40c3-b121-c20568b24c2e"[label="x|10|0.6|",shape=record]; 
-	"5c5b2705-4c20-4537-81f3-86d62a9d99ee" -> "36127b7e-e70e-40c3-b121-c20568b24c2e"; 
-	"666bef29-5402-4003-b929-6d6eab113c79" -> "5c5b2705-4c20-4537-81f3-86d62a9d99ee"; 
+	"368db4e5-c326-4a61-a257-a16bd6cb3056"[label="o|-0.7071|1.0000|tanh",shape=record]; 
+	"878d49e0-097a-45f2-baee-cfd4435af5c4"[label="n|0.8814|0.5000|+",shape=record]; 
+	"7fc4d226-8fc6-41f8-9491-c3a3167baaf2"[label="x1w1 + x2w2|-6.0000|0.5000|+",shape=record]; 
+	"76f8e777-cb60-45e5-ad1e-098ca1684314"[label="x1w1|-6.0000|0.5000|*",shape=record]; 
+	"0bdf9963-03c3-4d05-9937-0e0eba98ed0b"[label="x1|2.0000|-1.5000|",shape=record]; 
+	"76f8e777-cb60-45e5-ad1e-098ca1684314" -> "0bdf9963-03c3-4d05-9937-0e0eba98ed0b"; 
+	"567293ea-033e-46a7-9925-e96d0a7075d5"[label="w1|-3.0000|1.0000|",shape=record]; 
+	"76f8e777-cb60-45e5-ad1e-098ca1684314" -> "567293ea-033e-46a7-9925-e96d0a7075d5"; 
+	"7fc4d226-8fc6-41f8-9491-c3a3167baaf2" -> "76f8e777-cb60-45e5-ad1e-098ca1684314"; 
+	"170d911d-6346-4775-8a7a-774df7356fc0"[label="x2w2|0.0000|0.5000|*",shape=record]; 
+	"36a5df9e-3969-4263-ba65-61eafc747ad5"[label="x2|0.0000|0.5000|",shape=record]; 
+	"170d911d-6346-4775-8a7a-774df7356fc0" -> "36a5df9e-3969-4263-ba65-61eafc747ad5"; 
+	"dcd297c1-7e6d-47ff-ba0e-ea599e11cea1"[label="w2|1.0000|0.0000|",shape=record]; 
+	"170d911d-6346-4775-8a7a-774df7356fc0" -> "dcd297c1-7e6d-47ff-ba0e-ea599e11cea1"; 
+	"7fc4d226-8fc6-41f8-9491-c3a3167baaf2" -> "170d911d-6346-4775-8a7a-774df7356fc0"; 
+	"878d49e0-097a-45f2-baee-cfd4435af5c4" -> "7fc4d226-8fc6-41f8-9491-c3a3167baaf2"; 
+	"4ec68864-d973-4e8c-8758-1a70593001b0"[label="b|6.8814|0.5000|",shape=record]; 
+	"878d49e0-097a-45f2-baee-cfd4435af5c4" -> "4ec68864-d973-4e8c-8758-1a70593001b0"; 
+	"368db4e5-c326-4a61-a257-a16bd6cb3056" -> "878d49e0-097a-45f2-baee-cfd4435af5c4"; 
 }

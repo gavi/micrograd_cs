@@ -3,7 +3,7 @@ public class Value{
     public double Grad{get;set;} = 0;
     public HashSet<Value> From {get;set;} = new HashSet<Value>();
     public String Opeartor{get;set;} = "";
-    private Action _backward{get;set;} = ()=>{};
+    public Action _backward{get;set;} = ()=>{};
     public string Label{get;set;} = "";
     public Value(double data,string label=""){
         this.Data = data;
@@ -28,7 +28,6 @@ public class Value{
     }
 
     //subtraction
-
      public static Value operator -(Value a,Value b){
         return a+(-b);
     }
@@ -56,8 +55,16 @@ public class Value{
         return ret;
     }
 
-    public Value tanh(){
-        return new Value(0);
+    public Value Tanh(){
+        var exp2 = Math.Exp(2*this.Data);
+        var tanh = (1-exp2)/(1+exp2);
+        var ret = new Value(tanh);
+        ret.From.Add(this);
+        ret.Opeartor = "tanh";
+        ret._backward = () =>{
+            this.Grad += (1 - (tanh*tanh)) * ret.Grad;
+        };  
+        return ret;
     }
 
     public static Value Pow (Value a,double by){

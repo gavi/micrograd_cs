@@ -29,14 +29,14 @@ class Program
         DrawGraph(y);
         NeuronTest();
     }
-
+    //Matching what karpahy had in the video
     static void NeuronTest(){
         //inputs
         var x1 = new Value(2.0){Label = "x1"};
         var x2 = new Value(0.0){Label = "x2"};
         //weights
-        var w1 = new Value(2.0){Label = "x1"};
-        var w2 = new Value(2.0){Label = "x1"};
+        var w1 = new Value(-3.0){Label = "w1"};
+        var w2 = new Value(1.0){Label = "w2"};
         //bias
         var b = new Value(6.8813753870195432){Label="b"};
 
@@ -44,7 +44,15 @@ class Program
         var x2w2 = x2*w2; x2w2.Label = "x2w2";
         var x1w1x2w2 = x1w1 + x2w2; x1w1x2w2.Label = "x1w1 + x2w2";
         var n = x1w1x2w2 + b; n.Label = "n";
-        
+
+        // var e = Value.Exp(2*n);
+        // var o = (e - 1) / (e + 1);
+        var o = n.Tanh();o.Label = "o";
+        o.Backward();
+        // o.Grad = 1;
+        // o._backward();
+        // n._backward();
+        DrawGraph(o);
     }
 
     static void add_test1(){
@@ -75,19 +83,26 @@ class Program
 
     static void DrawGraph(Value root){
         var graph = new DotGraph("Micrograd",true);
-        FillGraph(root,graph);
+        List<Value> visited = new List<Value>();
+        FillGraph(root,graph,visited);
         var dot = graph.Compile(true);
         File.WriteAllText("graph.dot",dot);
     }
 
-    static DotNode FillGraph(Value root,DotGraph graph){
+    static DotNode? FillGraph(Value root,DotGraph graph,List<Value> visited){
+        if (visited.Contains(root)){
+            return null;
+        }
+        visited.Add(root);
         var node = new DotNode(Guid.NewGuid().ToString());
         node.SetCustomAttribute("shape","record");
-        node.Label = $"{root.Label}|{root.Data}|{root.Grad}|{root.Opeartor}";
+        node.Label = $"{root.Label}|{root.Data.ToString("F4")}|{root.Grad.ToString("F4")}|{root.Opeartor}";
         graph.Elements.Add(node);
         foreach(var child in root.From){
-            var c = FillGraph(child,graph);            
-            graph.AddEdge(node,c);
+            var c = FillGraph(child,graph,visited);
+            if(c!=null){            
+                graph.AddEdge(node,c);
+            }
         }
         return node;
 
