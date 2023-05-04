@@ -8,7 +8,15 @@ class Program
     static void Main(string[] args)
     {
         
-        Value a = new Value(10,"a");
+        Neuron n = new Neuron(5);
+        var output = n.Call(new Value[]{1,2,3,4,5});
+        output.Backward();
+        DrawGraph(output);
+        //NeuronTest();
+    }
+
+    static void BasicTest(){
+            Value a = new Value(10,"a");
         Value b = new Value(20,"b");
         Value c = a + b;
         c.Label = "c";
@@ -27,7 +35,6 @@ class Program
         y.Backward();
         
         DrawGraph(y);
-        NeuronTest();
     }
     //Matching what karpahy had in the video
     static void NeuronTest(){
