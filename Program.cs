@@ -8,16 +8,29 @@ class Program
     {
         
         Neuron n = new Neuron(5);
-        var output = n.Call(new Value[]{1,2,3,4,5});
+        var output = n.Call(new List<Value>{1,2,3,4,5});
         output.Backward();
         DrawGraph(output);
         //NeuronTest();
 
-        MLP x = new MLP(3,new List<(int, int)>(){(3,0),(5,3),(2,5)});
+        //MLP x = new MLP(3,new List<(int, int)>(){(3,0),(5,3),(2,5)});
+
+        Layer layer = new Layer(3,2);
+        List<Value> ret = layer.Call(new List<Value>{1,2,3});
+        Console.WriteLine(layer);
+        foreach(var v in ret){
+            Console.WriteLine(v);
+        }
+
+        MLP m = new MLP(new List<int>{3,4,4,1});
+        Console.Write(m);
+        var mout = m.Call(new List<Value>{1,2,3});
+        mout[0].Backward();
+        DrawGraph(mout[0]);
     }
 
     static void BasicTest(){
-            Value a = new Value(10,"a");
+        Value a = new Value(10,"a");
         Value b = new Value(20,"b");
         Value c = a + b;
         c.Label = "c";

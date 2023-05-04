@@ -1,15 +1,30 @@
 public class MLP{
-    int NumLayers {get;set;}
-    List<(int,int)> LayerConfig{get;set;}
-
+    List<int> LayerSizes {get;set;}
     List<Layer> Layers{get;set;}
-    public MLP(int numLayers, List<(int,int)> layerConfig){
-        this.LayerConfig = new List<(int, int)>();
-        this.LayerConfig = layerConfig;
+    public MLP(List<int> layerSizes){
+        this.LayerSizes = layerSizes;
         this.Layers = new List<Layer>();
-        for (int i=0;i<numLayers;i++){
-            this.Layers.Add(new Layer(layerConfig[i].Item1,layerConfig[i].Item2));
+        for (int i=0;i<LayerSizes.Count-1;i++){
+            this.Layers.Add(new Layer(layerSizes[i],layerSizes[i+1]));
+            
         }
     }   
+
+    public List<Value> Call(List<Value> x){
+        List<Value> ret = x;
+        foreach(var layer in Layers){
+            ret = layer.Call(ret);
+        }
+        return ret;
+    }
+
+    public override string ToString()
+    {   
+        var ret = new System.Text.StringBuilder("MLP\n---\n");
+        foreach(var l in Layers){
+            ret.Append(l.ToString()+"\n");
+        }
+        return ret.ToString();
+    }
 }
 
