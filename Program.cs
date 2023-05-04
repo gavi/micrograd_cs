@@ -121,6 +121,10 @@ class Program
             node.Color = (System.Drawing.Color.Red);
             node.FillColor = System.Drawing.Color.Gray;
         }
+        if(root.From.Count==0){
+            node.Color = (System.Drawing.Color.Green);
+            node.FillColor = System.Drawing.Color.LightGreen;
+        }
         node.Label = $"{root.Label}|{root.Data.ToString("F4")}|{root.Grad.ToString("F4")}|{root.Opeartor}";
         graph.Elements.Add(node);
         foreach(var child in root.From){

@@ -4,8 +4,13 @@ public class MLP{
     public MLP(List<int> layerSizes){
         this.LayerSizes = layerSizes;
         this.Layers = new List<Layer>();
-        for (int i=0;i<LayerSizes.Count-1;i++){
-            this.Layers.Add(new Layer(layerSizes[i],layerSizes[i+1]));
+        for (int i=0;i<LayerSizes.Count;i++){
+            if(i==0){
+                this.Layers.Add(new Layer(layerSizes[i],layerSizes[i]));
+            }
+            else{
+                this.Layers.Add(new Layer(layerSizes[i-1],layerSizes[i]));
+            }
             
         }
     }   
