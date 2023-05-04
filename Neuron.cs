@@ -7,7 +7,7 @@ public class Neuron{
         NumInputs = numInputs;
         Weights = new List<Value>();
         for(int i=0;i<numInputs;i++){
-            var weight = new Value(Random.Shared.NextDouble());
+            var weight = new Value(Random.Shared.NextDouble() * 2 -1);
             Weights.Add(weight);
         }
         Bias = Random.Shared.NextDouble() * 2 -1; //To get a number between -1 and 1

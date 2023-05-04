@@ -117,6 +117,10 @@ class Program
         visited.Add(root);
         var node = new DotNode(Guid.NewGuid().ToString());
         node.SetCustomAttribute("shape","record");
+        if(root.Opeartor=="tanh"){
+            node.Color = (System.Drawing.Color.Red);
+            node.FillColor = System.Drawing.Color.Gray;
+        }
         node.Label = $"{root.Label}|{root.Data.ToString("F4")}|{root.Grad.ToString("F4")}|{root.Opeartor}";
         graph.Elements.Add(node);
         foreach(var child in root.From){
