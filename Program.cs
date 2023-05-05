@@ -20,6 +20,12 @@ class Program {
             Console.WriteLine(v);
         }
 
+        MLPTest();
+       
+        
+    }
+    
+    static void MLPTest(){
         MLP m = new MLP(3, new List<int> { 4, 4, 1 });
         Console.Write(m);
         var mout = m.Call(new List<Value> { 1, 2, 3 });
@@ -73,6 +79,7 @@ class Program {
         // n._backward();
         DrawGraph(o);
     }
+
 
     static void add_test1() {
         Value a = new Value(10);
