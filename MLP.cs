@@ -1,17 +1,14 @@
 public class MLP{
-    List<int> LayerSizes {get;set;}
+    int NumInputs{get;set;}
+    List<int> NumOuts {get;set;}
     List<Layer> Layers{get;set;}
-    public MLP(List<int> layerSizes){
-        this.LayerSizes = layerSizes;
+    public MLP(int numInputs, List<int> numOuts){
+        this.NumInputs = numInputs;
+        this.NumOuts = numOuts;
         this.Layers = new List<Layer>();
-        for (int i=0;i<LayerSizes.Count;i++){
-            if(i==0){
-                this.Layers.Add(new Layer(layerSizes[i],layerSizes[i]));
-            }
-            else{
-                this.Layers.Add(new Layer(layerSizes[i-1],layerSizes[i]));
-            }
-            
+        var sz = NumOuts.Prepend(numInputs).ToArray();
+        for (int i=0;i<NumOuts.Count;i++){
+            Layers.Add(new Layer(sz[i],sz[i+1]));
         }
     }   
 

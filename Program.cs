@@ -22,7 +22,7 @@ class Program
             Console.WriteLine(v);
         }
 
-        MLP m = new MLP(new List<int>{3,4,4,1});
+        MLP m = new MLP(3,new List<int>{4,4,1});
         Console.Write(m);
         var mout = m.Call(new List<Value>{1,2,3});
         mout[0].Backward();
