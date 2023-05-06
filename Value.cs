@@ -6,10 +6,11 @@ public class Value {
     public Action _backward { get; set; } = () => { };
     public string Label { get; set; } = "";
     public Value(double data, string label = "") {
+        ObjectCount++;
         this.Data = data;
         this.Label = label;
     }
-
+    public static int ObjectCount{get;set;} = 0;
     public static Value operator +(Value a, Value b) {
         var ret = new Value(0);
         ret.From.Add(a);

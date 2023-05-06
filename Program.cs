@@ -21,7 +21,9 @@ class Program {
         }
 
         var m = MLPTest();
-        Console.Write(m.Parameters.Count);
+        Console.WriteLine(m.Parameters.Count);
+        Console.WriteLine(Value.ObjectCount);
+        
 
     }
 
@@ -31,30 +33,35 @@ class Program {
         var xs = new List<List<Value>>{
             new List<Value>{2.0,3.0,-1.0},
             new List<Value>{3.0,-1.0,0.5},
-            new List<Value>{3.0,-1.0,0.5},
+            new List<Value>{0.5,1.0,1.0},
+            new List<Value>{1.0,1.0,-1.0},
         };
-        var ys = new double[] { 1.0, -1.0, -1.0, 1.0 };
+        var ys = new Value[] { 1.0, -1.0, -1.0, 1.0 };
 
         //Training Loop
-        for (int epoch = 0; epoch < 10; epoch++) {
+        for (int epoch = 0; epoch < 100; epoch++) {
             Value loss = 0;
-            int i = 0;
-
+           
             //Forward pass and calculate loss
-
+            var yPred = new List<Value>();
             foreach (var row in xs) {
-                var output = m.Call(row)[0];
-                loss += (output - ys[i]) * (output - ys[i]);
-                i += 1;
+                yPred.Add(m.Call(row)[0]);
+            }
+            
+            for(int i=0;i<yPred.Count;i++){
+                loss += (yPred[i] - ys[i]) * (yPred[i] - ys[i]);
+            }
+
+            //zero grad before backward
+            foreach (var param in m.Parameters) {
+                param.Grad = 0;
             }
 
             loss.Backward();
-
+            
             //Update parameters and set the Grad back to zero
-
             foreach (var param in m.Parameters) {
-                param.Data += - 0.01 * param.Data; // we are using negative to reduce the loss
-                param.Grad = 0;
+                param.Data += - 0.05 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
