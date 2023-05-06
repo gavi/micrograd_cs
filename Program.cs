@@ -53,7 +53,7 @@ class Program {
             //Update parameters and set the Grad back to zero
 
             foreach (var param in m.Parameters) {
-                param.Data = - 0.01 * param.Data; // we are using negative to reduce the loss
+                param.Data += - 0.01 * param.Data; // we are using negative to reduce the loss
                 param.Grad = 0;
             }
 
