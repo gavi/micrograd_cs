@@ -20,17 +20,24 @@ class Program {
             Console.WriteLine(v);
         }
 
-        MLPTest();
-       
+        var m = MLPTest();
+        Console.Write(m.Parameters.Count);
         
     }
     
-    static void MLPTest(){
+    static MLP MLPTest(){
         MLP m = new MLP(3, new List<int> { 4, 4, 1 });
         Console.Write(m);
         var mout = m.Call(new List<Value> { 1, 2, 3 });
+        var xs = new List<List<Value>>{
+            new List<Value>{2.0,3.0,-1.0},
+            new List<Value>{3.0,-1.0,0.5},
+            new List<Value>{3.0,-1.0,0.5},
+        };
+        var ys = new double[]{1.0,-1.0,-1.0,1.0};
         mout[0].Backward();
         DrawGraph(mout[0]);
+        return m;
     }
 
     static void BasicTest() {

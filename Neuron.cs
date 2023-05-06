@@ -3,6 +3,16 @@ public class Neuron {
     public List<Value> Weights { get; set; }
     public Value Bias { get; set; }
 
+    public List<Value> Parameters {
+        get
+        {
+            List<Value> ret = new List<Value>();
+            ret.AddRange(Weights);
+            ret.Add(Bias);
+            return ret;
+        }
+    }
+
     public Neuron(int numInputs) {
         NumInputs = numInputs;
         Weights = new List<Value>();

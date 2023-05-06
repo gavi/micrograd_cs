@@ -2,6 +2,16 @@ public class Layer {
     public int NumOutputs { get; set; }
     public int NumInputs { get; set; }
     List<Neuron> Neurons { get; set; }
+
+    public List<Value> Parameters{
+        get{
+            List<Value> list = new List<Value>();
+            foreach(var n in Neurons){
+                list.AddRange(n.Parameters);
+            }
+            return list;
+        }
+    }
     public Layer(int numInputs, int numOutputs) {
         this.NumInputs = numInputs;
         this.NumOutputs = numOutputs;
