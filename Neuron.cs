@@ -30,7 +30,7 @@ public class Neuron {
             i = i + 1;
         }
         sum += Bias;
-        var ret = sum.Tanh();//squishing function
+        var ret = Value.Tanh(sum);//squishing function
         return ret;
     }
 

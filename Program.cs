@@ -8,8 +8,8 @@ class Program {
         Neuron n = new Neuron(5);
         var output = n.Call(new List<Value> { 1, 2, 3, 4, 5 });
         output.Backward();
-        DrawGraph(output);
-        //NeuronTest();
+        //DrawGraph(output);
+        NeuronTest();
 
         //MLP x = new MLP(3,new List<(int, int)>(){(3,0),(5,3),(2,5)});
 
@@ -24,6 +24,11 @@ class Program {
         Console.WriteLine(m.Parameters.Count);
         Console.WriteLine(Value.ObjectCount);
         
+        // Value a = new Value(10);
+        // Value b = new Value(10);
+        // Value c = a *  b;
+        // c.Backward();
+        // DrawGraph(c);
 
     }
 
@@ -58,10 +63,11 @@ class Program {
             }
 
             loss.Backward();
+            //DrawGraph(loss);
             
             //Update parameters and set the Grad back to zero
             foreach (var param in m.Parameters) {
-                param.Data += - 0.05 * param.Grad; // we are using negative to reduce the loss
+                param.Data += - 0.1 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
@@ -109,7 +115,7 @@ class Program {
 
         // var e = Value.Exp(2*n);
         // var o = (e - 1) / (e + 1);
-        var o = n.Tanh(); o.Label = "o";
+        var o = Value.Tanh(n); o.Label = "o";
         o.Backward();
         // o.Grad = 1;
         // o._backward();

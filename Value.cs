@@ -56,14 +56,14 @@ public class Value {
         return ret;
     }
 
-    public Value Tanh() {
-        var exp2 = Math.Exp(2 * this.Data);
+    public static Value Tanh(Value a) {
+        var exp2 = Math.Exp(2 * a.Data);
         var tanh = (1 - exp2) / (1 + exp2);
         var ret = new Value(tanh);
-        ret.From.Add(this);
+        ret.From.Add(a);
         ret.Opeartor = "tanh";
         ret._backward = () => {
-            this.Grad += (1 - (tanh * tanh)) * ret.Grad;
+            a.Grad += (1 - (tanh * tanh)) * ret.Grad;
         };
         return ret;
     }
@@ -102,6 +102,7 @@ public class Value {
         List<Value> visited = new List<Value>();
         List<Value> topo = new List<Value>();
         TopoSort(this, visited, topo);
+        Console.WriteLine($"TopoCount: {topo.Count}");
         this.Grad = 1.0;
         foreach (var val in topo.Reverse<Value>()) {
             val._backward();
