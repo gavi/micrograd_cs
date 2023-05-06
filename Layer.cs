@@ -3,10 +3,10 @@ public class Layer {
     public int NumInputs { get; set; }
     List<Neuron> Neurons { get; set; }
 
-    public List<Value> Parameters{
-        get{
+    public List<Value> Parameters {
+        get {
             List<Value> list = new List<Value>();
-            foreach(var n in Neurons){
+            foreach (var n in Neurons) {
                 list.AddRange(n.Parameters);
             }
             return list;

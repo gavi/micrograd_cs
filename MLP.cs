@@ -12,10 +12,10 @@ public class MLP {
         }
     }
 
-    public List<Value> Parameters{
-        get{
+    public List<Value> Parameters {
+        get {
             List<Value> list = new List<Value>();
-            foreach(var n in Layers){
+            foreach (var n in Layers) {
                 list.AddRange(n.Parameters);
             }
             return list;

@@ -4,8 +4,7 @@ public class Neuron {
     public Value Bias { get; set; }
 
     public List<Value> Parameters {
-        get
-        {
+        get {
             List<Value> ret = new List<Value>();
             ret.AddRange(Weights);
             ret.Add(Bias);

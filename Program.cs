@@ -22,21 +22,44 @@ class Program {
 
         var m = MLPTest();
         Console.Write(m.Parameters.Count);
-        
+
     }
-    
-    static MLP MLPTest(){
+
+    static MLP MLPTest() {
         MLP m = new MLP(3, new List<int> { 4, 4, 1 });
         Console.Write(m);
-        var mout = m.Call(new List<Value> { 1, 2, 3 });
         var xs = new List<List<Value>>{
             new List<Value>{2.0,3.0,-1.0},
             new List<Value>{3.0,-1.0,0.5},
             new List<Value>{3.0,-1.0,0.5},
         };
-        var ys = new double[]{1.0,-1.0,-1.0,1.0};
-        mout[0].Backward();
-        DrawGraph(mout[0]);
+        var ys = new double[] { 1.0, -1.0, -1.0, 1.0 };
+
+        //Training Loop
+        for (int epoch = 0; epoch < 10; epoch++) {
+            Value loss = 0;
+            int i = 0;
+
+            //Forward pass and calculate loss
+
+            foreach (var row in xs) {
+                var output = m.Call(row)[0];
+                loss += (output - ys[i]) * (output - ys[i]);
+                i += 1;
+            }
+
+            loss.Backward();
+
+            //Update parameters and set the Grad back to zero
+
+            foreach (var param in m.Parameters) {
+                param.Data = - 0.01 * param.Data; // we are using negative to reduce the loss
+                param.Grad = 0;
+            }
+
+            Console.WriteLine($"Loss: {loss.Data}");
+        }
+        //DrawGraph(loss);
         return m;
     }
 
