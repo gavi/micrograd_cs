@@ -5,25 +5,25 @@ using DotNetGraph.Node;
 class Program {
     static void Main(string[] args) {
 
-        Neuron n = new Neuron(5);
-        var output = n.Call(new List<Value> { 1, 2, 3, 4, 5 });
-        output.Backward();
+        // Neuron n = new Neuron(5);
+        // var output = n.Call(new List<Value> { 1, 2, 3, 4, 5 });
+        // output.Backward();
         //DrawGraph(output);
         NeuronTest();
 
         //MLP x = new MLP(3,new List<(int, int)>(){(3,0),(5,3),(2,5)});
 
-        Layer layer = new Layer(3, 2);
-        List<Value> ret = layer.Call(new List<Value> { 1, 2, 3 });
-        Console.WriteLine(layer);
-        foreach (var v in ret) {
-            Console.WriteLine(v);
-        }
+        // Layer layer = new Layer(3, 2);
+        // List<Value> ret = layer.Call(new List<Value> { 1, 2, 3 });
+        // Console.WriteLine(layer);
+        // foreach (var v in ret) {
+        //     Console.WriteLine(v);
+        // }
 
-        var m = MLPTest();
-        Console.WriteLine(m.Parameters.Count);
-        Console.WriteLine(Value.ObjectCount);
-        
+        // var m = MLPTest();
+        // Console.WriteLine(m.Parameters.Count);
+        // Console.WriteLine(Value.ObjectCount);
+
         // Value a = new Value(10);
         // Value b = new Value(10);
         // Value c = a *  b;
@@ -44,16 +44,16 @@ class Program {
         var ys = new Value[] { 1.0, -1.0, -1.0, 1.0 };
 
         //Training Loop
-        for (int epoch = 0; epoch < 100; epoch++) {
+        for (int epoch = 0; epoch < 20; epoch++) {
             Value loss = 0;
-           
+
             //Forward pass and calculate loss
             var yPred = new List<Value>();
             foreach (var row in xs) {
                 yPred.Add(m.Call(row)[0]);
             }
-            
-            for(int i=0;i<yPred.Count;i++){
+
+            for (int i = 0; i < yPred.Count; i++) {
                 loss += (yPred[i] - ys[i]) * (yPred[i] - ys[i]);
             }
 
@@ -63,11 +63,11 @@ class Program {
             }
 
             loss.Backward();
-            //DrawGraph(loss);
-            
+            DrawGraph(loss);
+
             //Update parameters and set the Grad back to zero
             foreach (var param in m.Parameters) {
-                param.Data += - 0.1 * param.Grad; // we are using negative to reduce the loss
+                param.Data += -0.05 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
@@ -115,7 +115,7 @@ class Program {
 
         // var e = Value.Exp(2*n);
         // var o = (e - 1) / (e + 1);
-        var o = Value.Tanh(n); o.Label = "o";
+        var o = Value.Relu(n); o.Label = "o";
         o.Backward();
         // o.Grad = 1;
         // o._backward();
@@ -165,7 +165,7 @@ class Program {
         visited.Add(root);
         var node = new DotNode(Guid.NewGuid().ToString());
         node.SetCustomAttribute("shape", "record");
-        if (root.Opeartor == "tanh") {
+        if (root.Operator == "tanh" || root.Operator == "relu") {
             node.Color = (System.Drawing.Color.Red);
             node.FillColor = System.Drawing.Color.Gray;
         }
@@ -173,7 +173,7 @@ class Program {
             node.Color = (System.Drawing.Color.Green);
             node.FillColor = System.Drawing.Color.LightGreen;
         }
-        node.Label = $"{root.Label}|{root.Data.ToString("F4")}|{root.Grad.ToString("F4")}|{root.Opeartor}";
+        node.Label = $"{root.Label}|{root.Data.ToString("F4")}|{root.Grad.ToString("F4")}|{root.Operator}";
         graph.Elements.Add(node);
         foreach (var child in root.From) {
             var c = FillGraph(child, graph, visited);

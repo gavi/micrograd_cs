@@ -2,7 +2,7 @@ public class Value {
     public double Data { get; set; } = 0;
     public double Grad { get; set; } = 0;
     public HashSet<Value> From { get; set; } = new HashSet<Value>();
-    public String Opeartor { get; set; } = "";
+    public String Operator { get; set; } = "";
     public Action _backward { get; set; } = () => { };
     public string Label { get; set; } = "";
     public Value(double data, string label = "") {
@@ -10,12 +10,12 @@ public class Value {
         this.Data = data;
         this.Label = label;
     }
-    public static int ObjectCount{get;set;} = 0;
+    public static int ObjectCount { get; set; } = 0;
     public static Value operator +(Value a, Value b) {
         var ret = new Value(0);
         ret.From.Add(a);
         ret.From.Add(b);
-        ret.Opeartor = "+";
+        ret.Operator = "+";
         ret.Data = a.Data + b.Data;
         ret._backward = () => {
             a.Grad += ret.Grad;
@@ -37,7 +37,7 @@ public class Value {
         var ret = new Value(0);
         ret.From.Add(a);
         ret.From.Add(b);
-        ret.Opeartor = "*";
+        ret.Operator = "*";
         ret.Data = a.Data * b.Data;
         ret._backward = () => {
             a.Grad += b.Data * ret.Grad;
@@ -49,7 +49,7 @@ public class Value {
     public static Value Exp(Value a) {
         var ret = new Value(Math.Exp(a.Data));
         ret.From.Add(a);
-        ret.Opeartor = "e^x";
+        ret.Operator = "e^x";
         ret._backward = () => {
             a.Grad += Math.Exp(a.Data) * ret.Grad;
         };
@@ -61,9 +61,19 @@ public class Value {
         var tanh = (1 - exp2) / (1 + exp2);
         var ret = new Value(tanh);
         ret.From.Add(a);
-        ret.Opeartor = "tanh";
+        ret.Operator = "tanh";
         ret._backward = () => {
             a.Grad += (1 - (tanh * tanh)) * ret.Grad;
+        };
+        return ret;
+    }
+
+     public static Value Relu(Value a) {
+        var ret = new Value(a.Data<0?0:a.Data);
+        ret.From.Add(a);
+        ret.Operator = "relu";
+        ret._backward = () => {
+            a.Grad += (ret.Data > 0 ? 1 : 0);
         };
         return ret;
     }
@@ -74,13 +84,13 @@ public class Value {
         ret._backward = () => {
             a.Grad += Math.Pow(a.Data, by - 1) * ret.Grad;
         };
-        ret.Opeartor = "^";
+        ret.Operator = "^";
         return ret;
     }
 
     public static Value operator /(Value a, Value b) {
         var ret = a * Pow(b, -1);
-        ret.Opeartor = "/";
+        ret.Operator = "/";
         return ret;
     }
 
@@ -110,6 +120,6 @@ public class Value {
     }
 
     public override string ToString() {
-        return $"{this.Label}:{this.Data}:[{this.Grad}]" + (this.Opeartor != "" ? $"- op: {this.Opeartor}" : "") + (this.From.Count > 0 ? "from - " : "");
+        return $"{this.Label}:{this.Data}:[{this.Grad}]" + (this.Operator != "" ? $"- op: {this.Operator}" : "") + (this.From.Count > 0 ? "from - " : "");
     }
 }
