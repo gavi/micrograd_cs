@@ -112,7 +112,7 @@ public class Value {
         List<Value> visited = new List<Value>();
         List<Value> topo = new List<Value>();
         TopoSort(this, visited, topo);
-        Console.WriteLine($"TopoCount: {topo.Count}");
+        // Console.WriteLine($"TopoCount: {topo.Count}");
         this.Grad = 1.0;
         foreach (var val in topo.Reverse<Value>()) {
             val._backward();

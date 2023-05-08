@@ -9,8 +9,8 @@ class Program {
         // var output = n.Call(new List<Value> { 1, 2, 3, 4, 5 });
         // output.Backward();
         //DrawGraph(output);
-        NeuronTest();
-
+        //NeuronTest();
+        MLPTest();
         //MLP x = new MLP(3,new List<(int, int)>(){(3,0),(5,3),(2,5)});
 
         // Layer layer = new Layer(3, 2);
@@ -44,7 +44,7 @@ class Program {
         var ys = new Value[] { 1.0, -1.0, -1.0, 1.0 };
 
         //Training Loop
-        for (int epoch = 0; epoch < 20; epoch++) {
+        for (int epoch = 0; epoch < 100; epoch++) {
             Value loss = 0;
 
             //Forward pass and calculate loss
