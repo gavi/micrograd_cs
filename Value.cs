@@ -58,7 +58,7 @@ public class Value {
 
     public static Value Tanh(Value a) {
         var exp2 = Math.Exp(2 * a.Data);
-        var tanh = (1 - exp2) / (1 + exp2);
+        var tanh = (exp2 - 1) / (exp2 + 1);
         var ret = new Value(tanh);
         ret.From.Add(a);
         ret.Operator = "tanh";

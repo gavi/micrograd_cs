@@ -42,8 +42,6 @@ class Program {
             foreach (var l in losses) {
                 loss += l;
             }
-            loss = loss / losses.Count;
-
             //zero grad before backward
             foreach (var param in m.Parameters) {
                 param.Grad = 0;
