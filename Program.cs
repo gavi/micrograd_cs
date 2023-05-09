@@ -1,6 +1,5 @@
 ﻿namespace dn_mnist;
 using DotNetGraph;
-using DotNetGraph.Core;
 using DotNetGraph.Extensions;
 using DotNetGraph.Node;
 class Program {
