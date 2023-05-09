@@ -68,8 +68,8 @@ public class Value {
         return ret;
     }
 
-     public static Value Relu(Value a) {
-        var ret = new Value(a.Data<0?0:a.Data);
+    public static Value Relu(Value a) {
+        var ret = new Value(a.Data < 0 ? 0 : a.Data);
         ret.From.Add(a);
         ret.Operator = "relu";
         ret._backward = () => {
@@ -120,6 +120,6 @@ public class Value {
     }
 
     public override string ToString() {
-        return $"{this.Label}:{this.Data}:[{this.Grad}]" + (this.Operator != "" ? $"- op: {this.Operator}" : "") ;
+        return $"{this.Label}:{this.Data}:[{this.Grad}]" + (this.Operator != "" ? $"- op: {this.Operator}" : "");
     }
 }

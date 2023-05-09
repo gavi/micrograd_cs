@@ -1,7 +1,7 @@
 public class Layer {
     public int NumOutputs { get; set; }
     public int NumInputs { get; set; }
-    List<Neuron> Neurons { get; set; }
+    public List<Neuron> Neurons { get; set; }
 
     public List<Value> Parameters {
         get {

@@ -1,5 +1,6 @@
 ﻿namespace dn_mnist;
 using DotNetGraph;
+using DotNetGraph.Core;
 using DotNetGraph.Extensions;
 using DotNetGraph.Node;
 class Program {
@@ -8,11 +9,11 @@ class Program {
         //BasicTest2();
         //NeuronTest();
         MLPTest();
-        
+
     }
 
     static MLP MLPTest() {
-        MLP m = new MLP(3, new List<int> { 4, 4, 1 });
+        MLP m = new MLP(3, new List<int> { 4, 4, 4, 1 });
         Console.Write(m);
         var xs = new List<List<Value>>{
             new List<Value>{2.0,3.0,-1.0},
@@ -35,13 +36,13 @@ class Program {
             var losses = new List<Value>();
 
             for (int i = 0; i < yPred.Count; i++) {
-                losses.Add(Value.Pow((yPred[i] - ys[i]),2));
+                losses.Add(Value.Pow((yPred[i] - ys[i]), 2));
             }
 
-            foreach(var l in losses){
+            foreach (var l in losses) {
                 loss += l;
             }
-            loss = loss/losses.Count;
+            loss = loss / losses.Count;
 
             //zero grad before backward
             foreach (var param in m.Parameters) {
@@ -49,9 +50,9 @@ class Program {
             }
 
             loss.Backward();
-            DrawGraph(loss);
 
-            //Update parameters and set the Grad back to zero
+
+            //Update parameters
             foreach (var param in m.Parameters) {
                 param.Data -= 0.01 * param.Grad; // we are using negative to reduce the loss
             }
@@ -59,6 +60,7 @@ class Program {
             Console.WriteLine($"Loss: {loss.Data}");
         }
         //DrawGraph(loss);
+        DrawNetwork(m);
         Console.WriteLine($"Parameters: {m.Parameters.Count}");
         return m;
     }
@@ -66,7 +68,7 @@ class Program {
     static void BasicTest1() {
         Value x = new Value(10, "x");
         Value y = new Value(20, "y");
-        Value z = 2 * Value.Pow(x,2) + 3 * y ; z.Label ="z";
+        Value z = 2 * Value.Pow(x, 2) + 3 * y; z.Label = "z";
 
         z.Backward();
 
@@ -75,7 +77,7 @@ class Program {
     static void BasicTest2() {
         Value x = new Value(10, "x");
         Value y = new Value(20, "y");
-        Value z = 2 * x + 3 * y ; z.Label ="z";
+        Value z = 2 * x + 3 * y; z.Label = "z";
 
         z.Backward();
 
@@ -167,5 +169,47 @@ class Program {
         }
         return node;
 
+    }
+
+    static void DrawNetwork(MLP mlp) {
+        var graph = new DotGraph("Network", true);
+        graph.Elements.Add(new DotString("rankdir=LR;"));
+        List<DotNode> prev = new List<DotNode>();
+        List<DotNode> current = new List<DotNode>();
+
+        for (int i = 0; i <= mlp.NumOuts.Count; i++) {
+            if (i == 0) {
+                //draw the first layer
+                for (int n = 0; n < mlp.NumInputs; n++) {
+                    var id = Guid.NewGuid().ToString();
+                    var node = new DotNode(id);
+                    node.Label = "i";
+                    node.Style = DotNodeStyle.Filled;
+                    node.FillColor = System.Drawing.Color.LightGoldenrodYellow;
+                    graph.Elements.Add(node);
+                    prev.Add(node);
+                }
+            }
+            else {
+                Layer l = mlp.Layers[i - 1];
+                foreach (var neuron in l.Neurons) {
+                    var id = Guid.NewGuid().ToString();
+                    var node = new DotNode(id);
+                    node.Label = i == mlp.NumOuts.Count ? "o" : "H";
+                    node.Style = DotNodeStyle.Filled;
+                    node.FillColor = i == mlp.NumOuts.Count ? System.Drawing.Color.LightSalmon : System.Drawing.Color.LightCyan;
+                    current.Add(node);
+                    graph.Elements.Add(node);
+                    foreach (var pnode in prev) {
+                        graph.AddEdge(pnode, node);
+                    }
+                }
+                prev.Clear();
+                prev.AddRange(current);
+                current.Clear();
+            }
+        }
+        var dot = graph.Compile(true);
+        File.WriteAllText("network.dot", dot);
     }
 }

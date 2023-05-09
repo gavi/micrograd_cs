@@ -1,7 +1,7 @@
 public class MLP {
-    int NumInputs { get; set; }
-    List<int> NumOuts { get; set; }
-    List<Layer> Layers { get; set; }
+    public int NumInputs { get; set; }
+    public List<int> NumOuts { get; set; }
+    public List<Layer> Layers { get; set; }
     public MLP(int numInputs, List<int> numOuts) {
         this.NumInputs = numInputs;
         this.NumOuts = numOuts;
