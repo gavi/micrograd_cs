@@ -8,7 +8,8 @@ class Program {
 
         //BasicTest2();
         //NeuronTest();
-        MLPTest();
+        //MLPTest();
+        MLPIrisTest();
 
     }
 
@@ -53,13 +54,86 @@ class Program {
 
             //Update parameters
             foreach (var param in m.Parameters) {
-                param.Data -= 0.01 * param.Grad; // we are using negative to reduce the loss
+                param.Data -= 0.1 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
         }
         DrawGraph(loss);
         DrawNetwork(m);
+        Console.WriteLine($"Parameters: {m.Parameters.Count}");
+        return m;
+    }
+    static double ToCategory(string category) {
+        if (category == "Iris-setosa") {
+            return -1;
+        }
+        else if (category == "Iris-versicolor") {
+            return 0;
+        }
+        else if (category == "Iris-virginica") {
+            return 1;
+        }
+        else {
+            throw new Exception("Invalid category");
+        }
+    }
+    static MLP MLPIrisTest() {
+        MLP m = new MLP(4, new List<int> { 6, 6, 1 });
+
+        var data = System.IO.File.ReadAllLines("data/iris.data");
+        var xs = new List<List<Value>>();
+
+        var ys = new List<Value>();
+
+        foreach (string line in data) {
+            var lst = new List<Value>();
+            var items = line.Split(",");
+            if(items.Length==5){
+                lst.Add(Double.Parse(items[0].Trim()));
+                lst.Add(Double.Parse(items[1].Trim()));
+                lst.Add(Double.Parse(items[2].Trim()));
+                lst.Add(Double.Parse(items[3].Trim()));
+                xs.Add(lst);
+                ys.Add(ToCategory(items[4]));
+            }
+        }
+
+        Value loss = 0;
+        //Training Loop
+        for (int epoch = 0; epoch < 20; epoch++) {
+            loss = 0;
+
+            //Forward pass and calculate loss
+            var yPred = new List<Value>();
+            foreach (var row in xs) {
+                yPred.Add(m.Call(row)[0]);
+            }
+
+            var losses = new List<Value>();
+
+            for (int i = 0; i < yPred.Count; i++) {
+                losses.Add(Value.Pow((yPred[i] - ys[i]), 2));
+            }
+
+            foreach (var l in losses) {
+                loss += l;
+            }
+            //zero grad before backward
+            foreach (var param in m.Parameters) {
+                param.Grad = 0;
+            }
+
+            loss.Backward();
+
+
+            //Update parameters
+            foreach (var param in m.Parameters) {
+                param.Data -= .1 * param.Grad; // we are using negative to reduce the loss
+            }
+
+            Console.WriteLine($"Loss: {loss.Data}");
+        }
         Console.WriteLine($"Parameters: {m.Parameters.Count}");
         return m;
     }
@@ -108,24 +182,6 @@ class Program {
         DrawGraph(o);
     }
 
-
-    static void add_test1() {
-        Value a = new Value(10);
-        Value b = new Value(20);
-        Value c = a + b;
-        c.Grad = 1;
-        c.Backward();
-    }
-
-    static void topo_test(Value root) {
-        List<Value> topo = new List<Value>();
-        List<Value> visited = new List<Value>();
-        Value.TopoSort(root, visited, topo);
-        foreach (var val in topo) {
-            Console.WriteLine(val);
-        }
-    }
-
     static void DFS(Value root) {
         Console.Write(root);
         foreach (var child in root.From) {
@@ -164,7 +220,7 @@ class Program {
         foreach (var child in root.From) {
             var c = FillGraph(child, graph, visited);
             if (c != null) {
-                graph.AddEdge(c,node);
+                graph.AddEdge(c, node);
             }
         }
         return node;
