@@ -5,31 +5,10 @@ using DotNetGraph.Node;
 class Program {
     static void Main(string[] args) {
 
-        // Neuron n = new Neuron(5);
-        // var output = n.Call(new List<Value> { 1, 2, 3, 4, 5 });
-        // output.Backward();
-        //DrawGraph(output);
+        //BasicTest2();
         //NeuronTest();
         MLPTest();
-        //MLP x = new MLP(3,new List<(int, int)>(){(3,0),(5,3),(2,5)});
-
-        // Layer layer = new Layer(3, 2);
-        // List<Value> ret = layer.Call(new List<Value> { 1, 2, 3 });
-        // Console.WriteLine(layer);
-        // foreach (var v in ret) {
-        //     Console.WriteLine(v);
-        // }
-
-        // var m = MLPTest();
-        // Console.WriteLine(m.Parameters.Count);
-        // Console.WriteLine(Value.ObjectCount);
-
-        // Value a = new Value(10);
-        // Value b = new Value(10);
-        // Value c = a *  b;
-        // c.Backward();
-        // DrawGraph(c);
-
+        
     }
 
     static MLP MLPTest() {
@@ -44,7 +23,7 @@ class Program {
         var ys = new Value[] { 1.0, -1.0, -1.0, 1.0 };
 
         //Training Loop
-        for (int epoch = 0; epoch < 100; epoch++) {
+        for (int epoch = 0; epoch < 20; epoch++) {
             Value loss = 0;
 
             //Forward pass and calculate loss
@@ -53,9 +32,16 @@ class Program {
                 yPred.Add(m.Call(row)[0]);
             }
 
+            var losses = new List<Value>();
+
             for (int i = 0; i < yPred.Count; i++) {
-                loss += (yPred[i] - ys[i]) * (yPred[i] - ys[i]);
+                losses.Add(Value.Pow((yPred[i] - ys[i]),2));
             }
+
+            foreach(var l in losses){
+                loss += l;
+            }
+            loss = loss/losses.Count;
 
             //zero grad before backward
             foreach (var param in m.Parameters) {
@@ -67,35 +53,33 @@ class Program {
 
             //Update parameters and set the Grad back to zero
             foreach (var param in m.Parameters) {
-                param.Data += -0.05 * param.Grad; // we are using negative to reduce the loss
+                param.Data -= 0.01 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
         }
         //DrawGraph(loss);
+        Console.WriteLine($"Parameters: {m.Parameters.Count}");
         return m;
     }
 
-    static void BasicTest() {
-        Value a = new Value(10, "a");
-        Value b = new Value(20, "b");
-        Value c = a + b;
-        c.Label = "c";
+    static void BasicTest1() {
+        Value x = new Value(10, "x");
+        Value y = new Value(20, "y");
+        Value z = 2 * Value.Pow(x,2) + 3 * y ; z.Label ="z";
 
-        Value d = new Value(2);
-        d.Label = "d";
+        z.Backward();
 
-        Value e = c * d;
-        e.Label = "e";
+        DrawGraph(z);
+    }
+    static void BasicTest2() {
+        Value x = new Value(10, "x");
+        Value y = new Value(20, "y");
+        Value z = 2 * x + 3 * y ; z.Label ="z";
 
-        Value x = new Value(10);
-        x.Label = "x";
-        Value y = e / x;
-        y.Label = "y";
+        z.Backward();
 
-        y.Backward();
-
-        DrawGraph(y);
+        DrawGraph(z);
     }
     //Matching what karpahy had in the video
     static void NeuronTest() {

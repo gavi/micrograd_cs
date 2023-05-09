@@ -23,11 +23,10 @@ public class MLP {
     }
 
     public List<Value> Call(List<Value> x) {
-        List<Value> ret = x;
         foreach (var layer in Layers) {
-            ret = layer.Call(ret);
+            x = layer.Call(x);
         }
-        return ret;
+        return x;
     }
 
     public override string ToString() {

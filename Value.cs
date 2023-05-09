@@ -82,9 +82,9 @@ public class Value {
         var ret = new Value(Math.Pow(a.Data, by));
         ret.From.Add(a);
         ret._backward = () => {
-            a.Grad += Math.Pow(a.Data, by - 1) * ret.Grad;
+            a.Grad += by * Math.Pow(a.Data, by - 1) * ret.Grad;
         };
-        ret.Operator = "^";
+        ret.Operator = "Pow";
         return ret;
     }
 
@@ -120,6 +120,6 @@ public class Value {
     }
 
     public override string ToString() {
-        return $"{this.Label}:{this.Data}:[{this.Grad}]" + (this.Operator != "" ? $"- op: {this.Operator}" : "") + (this.From.Count > 0 ? "from - " : "");
+        return $"{this.Label}:{this.Data}:[{this.Grad}]" + (this.Operator != "" ? $"- op: {this.Operator}" : "") ;
     }
 }
