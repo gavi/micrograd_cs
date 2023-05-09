@@ -13,7 +13,7 @@ class Program {
     }
 
     static MLP MLPTest() {
-        MLP m = new MLP(3, new List<int> { 4, 4, 4, 1 });
+        MLP m = new MLP(3, new List<int> { 4, 4, 1 });
         Console.Write(m);
         var xs = new List<List<Value>>{
             new List<Value>{2.0,3.0,-1.0},
