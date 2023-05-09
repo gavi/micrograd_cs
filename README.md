@@ -9,3 +9,7 @@ After watching the wonderful video from karpathy at https://www.youtube.com/watc
 ### Example Neural Network
 
 ![NN Example](network.svg)
+
+### Loss Function Visualized
+
+![NN Example](graph.svg)

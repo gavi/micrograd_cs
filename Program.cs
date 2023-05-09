@@ -23,9 +23,10 @@ class Program {
         };
         var ys = new Value[] { 1.0, -1.0, -1.0, 1.0 };
 
+        Value loss = 0;
         //Training Loop
         for (int epoch = 0; epoch < 20; epoch++) {
-            Value loss = 0;
+            loss = 0;
 
             //Forward pass and calculate loss
             var yPred = new List<Value>();
@@ -57,7 +58,7 @@ class Program {
 
             Console.WriteLine($"Loss: {loss.Data}");
         }
-        //DrawGraph(loss);
+        DrawGraph(loss);
         DrawNetwork(m);
         Console.WriteLine($"Parameters: {m.Parameters.Count}");
         return m;
@@ -99,7 +100,7 @@ class Program {
 
         // var e = Value.Exp(2*n);
         // var o = (e - 1) / (e + 1);
-        var o = Value.Relu(n); o.Label = "o";
+        var o = Value.Tanh(n); o.Label = "o";
         o.Backward();
         // o.Grad = 1;
         // o._backward();
@@ -149,11 +150,12 @@ class Program {
         visited.Add(root);
         var node = new DotNode(Guid.NewGuid().ToString());
         node.SetCustomAttribute("shape", "record");
+        node.Style = DotNodeStyle.Filled;
         if (root.Operator == "tanh" || root.Operator == "relu") {
             node.Color = (System.Drawing.Color.Red);
-            node.FillColor = System.Drawing.Color.Gray;
+            node.FillColor = System.Drawing.Color.LightGoldenrodYellow;
         }
-        if (root.From.Count == 0) {
+        if (root.From.Count == 0) {//leaf
             node.Color = (System.Drawing.Color.Green);
             node.FillColor = System.Drawing.Color.LightGreen;
         }
@@ -162,7 +164,7 @@ class Program {
         foreach (var child in root.From) {
             var c = FillGraph(child, graph, visited);
             if (c != null) {
-                graph.AddEdge(node, c);
+                graph.AddEdge(c,node);
             }
         }
         return node;
