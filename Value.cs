@@ -73,7 +73,7 @@ public class Value {
         ret.From.Add(a);
         ret.Operator = "relu";
         ret._backward = () => {
-            a.Grad += (ret.Data > 0 ? 1 : 0);
+            a.Grad += (a.Data > 0 ? 1 : 0) * ret.Grad;
         };
         return ret;
     }

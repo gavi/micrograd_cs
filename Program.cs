@@ -53,13 +53,13 @@ class Program {
 
             //Update parameters
             foreach (var param in m.Parameters) {
-                param.Data -= 0.1 * param.Grad; // we are using negative to reduce the loss
+                param.Data -= 0.05 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
         }
-        DrawGraph(loss);
-        DrawNetwork(m);
+        //DrawGraph(loss);
+        //DrawNetwork(m);
         Console.WriteLine($"Parameters: {m.Parameters.Count}");
         return m;
     }
@@ -78,7 +78,7 @@ class Program {
         }
     }
     static MLP MLPIrisTest() {
-        MLP m = new MLP(4, new List<int> { 6, 6, 1 });
+        MLP m = new MLP(4, new List<int> { 5,5, 1 });
 
         var data = System.IO.File.ReadAllLines("data/iris.data");
         var xs = new List<List<Value>>();
@@ -100,7 +100,7 @@ class Program {
 
         Value loss = 0;
         //Training Loop
-        for (int epoch = 0; epoch < 20; epoch++) {
+        for (int epoch = 0; epoch < 200; epoch++) {
             loss = 0;
 
             //Forward pass and calculate loss
@@ -114,10 +114,12 @@ class Program {
             for (int i = 0; i < yPred.Count; i++) {
                 losses.Add(Value.Pow((yPred[i] - ys[i]), 2));
             }
-
+            // PrintValueArr(losses);
             foreach (var l in losses) {
                 loss += l;
             }
+
+            loss = loss / xs.Count;
             //zero grad before backward
             foreach (var param in m.Parameters) {
                 param.Grad = 0;
@@ -128,7 +130,7 @@ class Program {
 
             //Update parameters
             foreach (var param in m.Parameters) {
-                param.Data -= .1 * param.Grad; // we are using negative to reduce the loss
+                param.Data -= .05 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
@@ -188,6 +190,13 @@ class Program {
             DFS(child);
             Console.Write(")");
         }
+    }
+
+    static void PrintValueArr(List<Value> arr){
+        foreach(var item in arr){
+            Console.Write($"{item.Data}, ");
+        }
+        Console.WriteLine();
     }
 
     static void DrawGraph(Value root) {
