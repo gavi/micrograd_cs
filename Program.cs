@@ -7,8 +7,19 @@ class Program {
 
         //BasicTest2();
         //NeuronTest();
-        //MLPTest();
-        MLPIrisTest();
+        MLPTest();
+        //MLPIrisTest();
+
+        // Value a = 1;a.Label="a";
+        // Value b = 2.0;b.Label="b";
+
+        
+        // Value c = Value.Pow(a,3);c.Label="c";
+        // c.Backward();
+        // DrawGraph(c);
+
+        //MLP network = new MLP(3,new List<int>{4,4,4,1});
+
 
     }
 
@@ -40,6 +51,8 @@ class Program {
                 losses.Add(Value.Pow((yPred[i] - ys[i]), 2));
             }
 
+            //Mean squared loss
+
             foreach (var l in losses) {
                 loss += l;
             }
@@ -58,7 +71,7 @@ class Program {
 
             Console.WriteLine($"Loss: {loss.Data}");
         }
-        //DrawGraph(loss);
+        DrawGraph(loss);
         //DrawNetwork(m);
         Console.WriteLine($"Parameters: {m.Parameters.Count}");
         return m;
@@ -77,13 +90,38 @@ class Program {
             throw new Exception("Invalid category");
         }
     }
+
+    static (List<T>, List<T>) SplitDataRandomly<T>(List<T> data, double trainPercentage, double testPercentage)
+    {
+        // Validate input percentages
+        if (trainPercentage + testPercentage != 1)
+        {
+            throw new ArgumentException("The sum of trainPercentage and testPercentage should be 1.");
+        }
+
+        // Shuffle the data
+        Random rng = new Random();
+        for (int i = data.Count - 1; i > 0; i--)
+        {
+            int j = rng.Next(0, i + 1);
+            T temp = data[i];
+            data[i] = data[j];
+            data[j] = temp;
+        }
+
+        // Split the data into test and train datasets
+        int trainSize = (int)Math.Floor(data.Count * trainPercentage);
+        List<T> trainData = data.GetRange(0, trainSize);
+        List<T> testData = data.GetRange(trainSize, data.Count - trainSize);
+
+        return (trainData, testData);
+    }
     static MLP MLPIrisTest() {
         MLP m = new MLP(4, new List<int> { 5,5, 1 });
 
         var data = System.IO.File.ReadAllLines("data/iris.data");
-        var xs = new List<List<Value>>();
-
-        var ys = new List<Value>();
+        
+        var allData = new List<List<Value>>();
 
         foreach (string line in data) {
             var lst = new List<Value>();
@@ -93,14 +131,30 @@ class Program {
                 lst.Add(Double.Parse(items[1].Trim()));
                 lst.Add(Double.Parse(items[2].Trim()));
                 lst.Add(Double.Parse(items[3].Trim()));
-                xs.Add(lst);
-                ys.Add(ToCategory(items[4]));
+                lst.Add(ToCategory(items[4]));
+                allData.Add(lst);                
             }
+        }
+
+        var (train,test) = SplitDataRandomly(allData,0.7,0.3);
+
+        var xs = new List<List<Value>>();
+
+        var ys = new List<Value>();
+
+        foreach (var item in train) {
+            var lst = new List<Value>();
+            lst.Add(item[0]);
+            lst.Add(item[1]);
+            lst.Add(item[2]);
+            lst.Add(item[3]);
+            xs.Add(lst);
+            ys.Add(item[4]);
         }
 
         Value loss = 0;
         //Training Loop
-        for (int epoch = 0; epoch < 200; epoch++) {
+        for (int epoch = 0; epoch < 20; epoch++) {
             loss = 0;
 
             //Forward pass and calculate loss
@@ -130,12 +184,19 @@ class Program {
 
             //Update parameters
             foreach (var param in m.Parameters) {
-                param.Data -= .05 * param.Grad; // we are using negative to reduce the loss
+                param.Data -= .01 * param.Grad; // we are using negative to reduce the loss
             }
 
             Console.WriteLine($"Loss: {loss.Data}");
         }
         Console.WriteLine($"Parameters: {m.Parameters.Count}");
+
+        //Lets test it
+        foreach(var item in test){
+            PrintValueArr(m.Call(new List<Value>{item[0],item[1],item[2],item[3]}));
+            Console.WriteLine($"Expected: {item[4]}");
+        }
+
         return m;
     }
 
@@ -276,4 +337,7 @@ class Program {
         var dot = graph.Compile(true);
         File.WriteAllText("network.dot", dot);
     }
+
+
+  
 }
